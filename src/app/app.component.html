@@ -23,7 +23,6 @@
 </div>
 
 <div class="page">
-  <!-- BANDEAU SUPERIEUR -->
   <header class="topbar">
     <div class="topbar-shell">
       <div class="topbar-left">
@@ -39,6 +38,7 @@
             id="reparateur"
             [(ngModel)]="reparateur"
             class="topbar-select"
+            [class.input-error]="showErrors && !reparateur"
           >
             <option value="">Sélectionner un réparateur</option>
             <option *ngFor="let item of reparateurs" [value]="item">
@@ -57,19 +57,17 @@
   </header>
 
   <div class="page-shell">
-    <!-- BANDEAU DOSSIER -->
     <section class="header-panel">
       <h1>Ma déclaration en ligne</h1>
 
       <div class="header-infos">
         <div><strong>Immatriculation :</strong> {{ immatriculation }}</div>
-        <div><strong>Véhicule :</strong> {{ vehiculeAffichage || "Kia" }}</div>
+        <div><strong>Véhicule :</strong> {{ vehiculeAffichage }}</div>
         <div><strong>Client :</strong> {{ clientAffichage }}</div>
         <div><strong>Numéro de dossier :</strong> {{ dossier }}</div>
       </div>
     </section>
 
-    <!-- STEPPER -->
     <section class="stepper">
       <div class="step" *ngFor="let step of steps; let last = last">
         <div class="step-visual">
@@ -85,13 +83,15 @@
       </div>
     </section>
 
-    <!-- INTRO -->
     <section class="intro">
       <h2>Informations véhicule</h2>
-      <p>Veuillez compléter les informations véhicule.</p>
+      <p>Veuillez compléter les informations du contexte du dossier.</p>
+      <p class="hotline">
+        Pour une assistance téléphonique sur votre dossier, vous pouvez joindre
+        notre hotline au 04 72 43 69 14
+      </p>
     </section>
 
-    <!-- TABLEAU VEHICULE -->
     <section class="card">
       <div class="card-header">
         <div class="card-title-wrap">
@@ -127,6 +127,7 @@
                 [(ngModel)]="marque"
                 (ngModelChange)="onMarqueChange()"
                 class="input"
+                [class.input-error]="showErrors && !marque"
               >
                 <option value="">Choisissez une marque</option>
                 <option *ngFor="let item of marques" [value]="item">
@@ -153,6 +154,7 @@
                 [(ngModel)]="modele"
                 (ngModelChange)="onModeleChange()"
                 class="input"
+                [class.input-error]="showErrors && !modele"
               >
                 <option value="">Choisissez un modèle</option>
                 <option *ngFor="let item of modelesDisponibles" [value]="item">
@@ -175,7 +177,11 @@
             <div class="field-label">Version</div>
 
             <ng-container *ngIf="isEditMode; else versionLecture">
-              <select [(ngModel)]="version" class="input">
+              <select
+                [(ngModel)]="version"
+                class="input"
+                [class.input-error]="showErrors && !version"
+              >
                 <option value="">Choisissez une version</option>
                 <option *ngFor="let item of versionsDisponibles" [value]="item">
                   {{ item }}
@@ -196,7 +202,6 @@
       </div>
     </section>
 
-    <!-- TABLEAU BENEFICIAIRE -->
     <section class="card">
       <div class="card-header">
         <div class="card-title-wrap">
@@ -247,30 +252,37 @@
       </div>
     </section>
 
-    <!-- ACTIONS -->
     <section class="page-actions">
-      <button
-        *ngIf="!isEditMode"
-        type="button"
-        class="btn btn-primary"
-        (click)="activerModification()"
-      >
-        Modifier
-      </button>
-
-      <ng-container *ngIf="isEditMode">
-        <button type="button" class="btn btn-secondary" (click)="sauvegarder()">
+      <div class="actions-left">
+        <button
+          *ngIf="isEditMode"
+          type="button"
+          class="btn btn-secondary"
+          (click)="sauvegarder()"
+        >
           Sauvegarder
+        </button>
+      </div>
+
+      <div class="actions-right">
+        <button
+          *ngIf="!isEditMode"
+          type="button"
+          class="btn btn-primary"
+          (click)="activerModification()"
+        >
+          Modifier
         </button>
 
         <button
+          *ngIf="isEditMode"
           type="button"
           class="btn btn-primary"
           (click)="validerEtContinuer()"
         >
-          Valider et continuer
+          Valider étape
         </button>
-      </ng-container>
+      </div>
     </section>
   </div>
 </div>

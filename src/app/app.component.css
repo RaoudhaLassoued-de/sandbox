@@ -290,6 +290,13 @@ body {
   color: #2f2f39;
 }
 
+.hotline {
+  margin-top: 8px !important;
+  font-size: 13px !important;
+  font-style: italic;
+  color: #6b7280;
+}
+
 /* CARDS */
 
 .card {
@@ -403,12 +410,26 @@ body {
   color: #3c4452;
 }
 
+.input-error {
+  border: 2px solid #ef2f2f;
+}
+
 /* ACTIONS */
 
 .page-actions {
   margin: 24px 16px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.actions-left {
+  display: flex;
+}
+
+.actions-right {
+  display: flex;
   gap: 16px;
 }
 
@@ -469,6 +490,16 @@ body {
   .page-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .actions-left,
+  .actions-right {
+    width: 100%;
+  }
+
+  .actions-right {
+    justify-content: stretch;
+    flex-direction: column;
   }
 
   .btn {

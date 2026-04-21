@@ -28,9 +28,11 @@ export class AppComponent {
   isEditMode = false;
 
   reparateur = '';
-  marque = 'Kia';
+  marque = '';
   modele = '';
   version = '';
+
+  showErrors = false;
 
   readonly immatriculation = 'FQ684WX';
   readonly numeroSerie = 'USYPH812GLL906264';
@@ -40,6 +42,7 @@ export class AppComponent {
   readonly civilite = 'M';
   readonly prenom = 'Thierry';
   readonly nom = 'MERLE';
+
   readonly mail = 'informatique@opteven.com';
   readonly adresse = '58 Chemin de saint roch';
   readonly cp = '38390';
@@ -96,7 +99,7 @@ export class AppComponent {
     const modele = (this.modele || '').trim();
 
     if (!marque && !modele) {
-      return '';
+      return 'Kia';
     }
 
     if (marque && modele) {
@@ -116,10 +119,7 @@ export class AppComponent {
 
   activerModification(): void {
     this.isEditMode = true;
-  }
-
-  passerEnConsultation(): void {
-    this.isEditMode = false;
+    this.clearToasts();
   }
 
   onMarqueChange(): void {
@@ -133,11 +133,13 @@ export class AppComponent {
 
   sauvegarder(): void {
     this.clearToasts();
+    this.showErrors = false;
     this.addToast('Succès', 'Le dossier a été sauvegardé.', 'success');
   }
 
   validerEtContinuer(): void {
     this.clearToasts();
+    this.showErrors = true;
 
     const erreurs: string[] = [];
 
