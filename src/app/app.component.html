@@ -1,0 +1,276 @@
+<div class="toast-container">
+  <div
+    *ngFor="let toast of toasts"
+    class="toast"
+    [class.toast-success]="toast.type === 'success'"
+  >
+    <div class="toast-accent"></div>
+
+    <div class="toast-content">
+      <div class="toast-title">{{ toast.title }}</div>
+      <div class="toast-message">{{ toast.message }}</div>
+    </div>
+
+    <button
+      type="button"
+      class="toast-close"
+      (click)="closeToast(toast.id)"
+      aria-label="Fermer"
+    >
+      ×
+    </button>
+  </div>
+</div>
+
+<div class="page">
+  <!-- BANDEAU SUPERIEUR -->
+  <header class="topbar">
+    <div class="topbar-shell">
+      <div class="topbar-left">
+        <div class="menu-icon">☰</div>
+        <span class="menu-label">Menu</span>
+      </div>
+
+      <div class="topbar-right">
+        <label class="topbar-label" for="reparateur">Réparateur</label>
+
+        <ng-container *ngIf="isEditMode; else reparateurLecture">
+          <select
+            id="reparateur"
+            [(ngModel)]="reparateur"
+            class="topbar-select"
+          >
+            <option value="">Sélectionner un réparateur</option>
+            <option *ngFor="let item of reparateurs" [value]="item">
+              {{ item }}
+            </option>
+          </select>
+        </ng-container>
+
+        <ng-template #reparateurLecture>
+          <div class="topbar-readonly">
+            {{ reparateur || "Non renseigné" }}
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-shell">
+    <!-- BANDEAU DOSSIER -->
+    <section class="header-panel">
+      <h1>Ma déclaration en ligne</h1>
+
+      <div class="header-infos">
+        <div><strong>Immatriculation :</strong> {{ immatriculation }}</div>
+        <div><strong>Véhicule :</strong> {{ vehiculeAffichage || "Kia" }}</div>
+        <div><strong>Client :</strong> {{ clientAffichage }}</div>
+        <div><strong>Numéro de dossier :</strong> {{ dossier }}</div>
+      </div>
+    </section>
+
+    <!-- STEPPER -->
+    <section class="stepper">
+      <div class="step" *ngFor="let step of steps; let last = last">
+        <div class="step-visual">
+          <div class="step-circle" [ngClass]="step.state">
+            {{ step.icon }}
+          </div>
+          <div class="step-line" *ngIf="!last"></div>
+        </div>
+
+        <div class="step-label" [ngClass]="step.state">
+          {{ step.label }}
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO -->
+    <section class="intro">
+      <h2>Informations véhicule</h2>
+      <p>Veuillez compléter les informations véhicule.</p>
+    </section>
+
+    <!-- TABLEAU VEHICULE -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title-wrap">
+          <div class="card-icon orange">🚗</div>
+          <h3>Véhicule</h3>
+        </div>
+      </div>
+
+      <div class="vehicle-grid">
+        <div class="vehicle-col">
+          <div class="field-row">
+            <div class="field-label">Date MEC</div>
+            <div class="field-value">{{ dateMec }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Immatriculation</div>
+            <div class="field-value">{{ immatriculation }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">N° série</div>
+            <div class="field-value">{{ numeroSerie }}</div>
+          </div>
+        </div>
+
+        <div class="vehicle-col">
+          <div class="field-row field-row-stack">
+            <div class="field-label">Marque</div>
+
+            <ng-container *ngIf="isEditMode; else marqueLecture">
+              <select
+                [(ngModel)]="marque"
+                (ngModelChange)="onMarqueChange()"
+                class="input"
+              >
+                <option value="">Choisissez une marque</option>
+                <option *ngFor="let item of marques" [value]="item">
+                  {{ item }}
+                </option>
+              </select>
+            </ng-container>
+
+            <ng-template #marqueLecture>
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!marque"
+              >
+                {{ marque || "Non renseigné" }}
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="field-row field-row-stack">
+            <div class="field-label">Modèle</div>
+
+            <ng-container *ngIf="isEditMode; else modeleLecture">
+              <select
+                [(ngModel)]="modele"
+                (ngModelChange)="onModeleChange()"
+                class="input"
+              >
+                <option value="">Choisissez un modèle</option>
+                <option *ngFor="let item of modelesDisponibles" [value]="item">
+                  {{ item }}
+                </option>
+              </select>
+            </ng-container>
+
+            <ng-template #modeleLecture>
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!modele"
+              >
+                {{ modele || "Non renseigné" }}
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="field-row field-row-stack">
+            <div class="field-label">Version</div>
+
+            <ng-container *ngIf="isEditMode; else versionLecture">
+              <select [(ngModel)]="version" class="input">
+                <option value="">Choisissez une version</option>
+                <option *ngFor="let item of versionsDisponibles" [value]="item">
+                  {{ item }}
+                </option>
+              </select>
+            </ng-container>
+
+            <ng-template #versionLecture>
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!version"
+              >
+                {{ version || "Non renseigné" }}
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLEAU BENEFICIAIRE -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title-wrap">
+          <div class="card-icon orange">👤</div>
+          <h3>Bénéficiaire</h3>
+        </div>
+      </div>
+
+      <div class="benef-grid">
+        <div class="benef-col">
+          <div class="field-row">
+            <div class="field-label">Prénom</div>
+            <div class="field-value">{{ prenom }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Nom</div>
+            <div class="field-value">{{ nom }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Mail</div>
+            <div class="field-value">{{ mail }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Adresse</div>
+            <div class="field-value">{{ adresse }}</div>
+          </div>
+        </div>
+
+        <div class="benef-col">
+          <div class="field-row">
+            <div class="field-label">Cp</div>
+            <div class="field-value">{{ cp }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Ville</div>
+            <div class="field-value">{{ ville }}</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-label">Pays</div>
+            <div class="field-value">{{ pays }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <section class="page-actions">
+      <button
+        *ngIf="!isEditMode"
+        type="button"
+        class="btn btn-primary"
+        (click)="activerModification()"
+      >
+        Modifier
+      </button>
+
+      <ng-container *ngIf="isEditMode">
+        <button type="button" class="btn btn-secondary" (click)="sauvegarder()">
+          Sauvegarder
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="validerEtContinuer()"
+        >
+          Valider et continuer
+        </button>
+      </ng-container>
+    </section>
+  </div>
+</div>
