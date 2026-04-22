@@ -41,15 +41,13 @@
             [class.input-error]="showErrors && !reparateur"
           >
             <option value="">Sélectionner un réparateur</option>
-            <option *ngFor="let item of reparateurs" [value]="item">
-              {{ item }}
-            </option>
+            <option *ngFor="let item of reparateurs" [value]="item">{{ item }}</option>
           </select>
         </ng-container>
 
         <ng-template #reparateurLecture>
           <div class="topbar-readonly">
-            {{ reparateur || "Non renseigné" }}
+            {{ reparateur || 'Non renseigné' }}
           </div>
         </ng-template>
       </div>
@@ -85,10 +83,9 @@
 
     <section class="intro">
       <h2>Informations véhicule</h2>
-      <p>Veuillez compléter les informations du contexte du dossier.</p>
+      <p>Veuillez compléter les informations du véhicule et du client.</p>
       <p class="hotline">
-        Pour une assistance téléphonique sur votre dossier, vous pouvez joindre
-        notre hotline au 04 72 43 69 14
+        Pour une assistance téléphonique sur votre dossier, vous pouvez joindre notre hotline au 04 72 43 69 14
       </p>
     </section>
 
@@ -97,6 +94,13 @@
         <div class="card-title-wrap">
           <div class="card-icon orange">🚗</div>
           <h3>Véhicule</h3>
+        </div>
+
+        <div class="info-badge-wrap card-info-right">
+          <button type="button" class="info-badge" aria-label="Information">i</button>
+          <div class="info-tooltip">
+            Un traitement plus rapide du dossier est possible si les informations Marque / Modèle / Version sont renseignées.
+          </div>
         </div>
       </div>
 
@@ -127,21 +131,15 @@
                 [(ngModel)]="marque"
                 (ngModelChange)="onMarqueChange()"
                 class="input"
-                [class.input-error]="showErrors && !marque"
               >
                 <option value="">Choisissez une marque</option>
-                <option *ngFor="let item of marques" [value]="item">
-                  {{ item }}
-                </option>
+                <option *ngFor="let item of marques" [value]="item">{{ item }}</option>
               </select>
             </ng-container>
 
             <ng-template #marqueLecture>
-              <div
-                class="field-value readonly-empty"
-                [class.is-empty]="!marque"
-              >
-                {{ marque || "Non renseigné" }}
+              <div class="field-value readonly-empty" [class.is-empty]="!marque">
+                {{ marque || 'Non renseigné' }}
               </div>
             </ng-template>
           </div>
@@ -154,21 +152,15 @@
                 [(ngModel)]="modele"
                 (ngModelChange)="onModeleChange()"
                 class="input"
-                [class.input-error]="showErrors && !modele"
               >
                 <option value="">Choisissez un modèle</option>
-                <option *ngFor="let item of modelesDisponibles" [value]="item">
-                  {{ item }}
-                </option>
+                <option *ngFor="let item of modelesDisponibles" [value]="item">{{ item }}</option>
               </select>
             </ng-container>
 
             <ng-template #modeleLecture>
-              <div
-                class="field-value readonly-empty"
-                [class.is-empty]="!modele"
-              >
-                {{ modele || "Non renseigné" }}
+              <div class="field-value readonly-empty" [class.is-empty]="!modele">
+                {{ modele || 'Non renseigné' }}
               </div>
             </ng-template>
           </div>
@@ -180,21 +172,15 @@
               <select
                 [(ngModel)]="version"
                 class="input"
-                [class.input-error]="showErrors && !version"
               >
                 <option value="">Choisissez une version</option>
-                <option *ngFor="let item of versionsDisponibles" [value]="item">
-                  {{ item }}
-                </option>
+                <option *ngFor="let item of versionsDisponibles" [value]="item">{{ item }}</option>
               </select>
             </ng-container>
 
             <ng-template #versionLecture>
-              <div
-                class="field-value readonly-empty"
-                [class.is-empty]="!version"
-              >
-                {{ version || "Non renseigné" }}
+              <div class="field-value readonly-empty" [class.is-empty]="!version">
+                {{ version || 'Non renseigné' }}
               </div>
             </ng-template>
           </div>
@@ -255,17 +241,6 @@
     <section class="page-actions">
       <div class="actions-left">
         <button
-          *ngIf="isEditMode"
-          type="button"
-          class="btn btn-secondary"
-          (click)="sauvegarder()"
-        >
-          Sauvegarder
-        </button>
-      </div>
-
-      <div class="actions-right">
-        <button
           *ngIf="!isEditMode"
           type="button"
           class="btn btn-primary"
@@ -278,10 +253,32 @@
           *ngIf="isEditMode"
           type="button"
           class="btn btn-primary"
-          (click)="validerEtContinuer()"
+          (click)="sauvegarder()"
         >
-          Valider étape
+          Sauvegarder
         </button>
+      </div>
+
+      <div class="actions-right">
+        <ng-container *ngIf="!isEditMode">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="suivantConsultation()"
+          >
+            Suivant
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isEditMode">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="validerEtContinuer()"
+          >
+            Valider étape
+          </button>
+        </ng-container>
       </div>
     </section>
   </div>

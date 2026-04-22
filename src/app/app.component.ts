@@ -26,13 +26,12 @@ interface ToastItem {
 })
 export class AppComponent {
   isEditMode = false;
+  showErrors = false;
 
   reparateur = '';
   marque = '';
   modele = '';
   version = '';
-
-  showErrors = false;
 
   readonly immatriculation = 'FQ684WX';
   readonly numeroSerie = 'USYPH812GLL906264';
@@ -81,7 +80,7 @@ export class AppComponent {
 
   steps: StepItem[] = [
     { label: 'Informations véhicule', state: 'current', icon: '✓' },
-    { label: 'Contexte du dossier', state: 'disabled', icon: '📄' },
+    { label: 'Information dossier', state: 'disabled', icon: '📄' },
     { label: 'Devis', state: 'disabled', icon: '🔧' },
     { label: 'Infos supplémentaires', state: 'disabled', icon: '📎' },
     { label: 'Récapitulatif', state: 'disabled', icon: '☰' },
@@ -131,36 +130,37 @@ export class AppComponent {
     this.version = '';
   }
 
-  sauvegarder(): void {
+  sauvegarder(showToast: boolean = true): void {
     this.clearToasts();
     this.showErrors = false;
-    this.addToast('Succès', 'Le dossier a été sauvegardé.', 'success');
+
+    if (showToast) {
+      this.addToast(
+        'Succès',
+        'Le dossier a été sauvegardé en brouillon',
+        'success'
+      );
+    }
+  }
+
+  suivantConsultation(): void {
+    this.clearToasts();
+    this.showErrors = true;
+
+    if (!this.reparateur.trim()) {
+      this.addToast('Erreur', 'Le réparateur est obligatoire.', 'error');
+      return;
+    }
+
+    this.addToast('Succès', 'Passage à l’étape suivante.', 'success');
   }
 
   validerEtContinuer(): void {
     this.clearToasts();
     this.showErrors = true;
 
-    const erreurs: string[] = [];
-
     if (!this.reparateur.trim()) {
-      erreurs.push('Le réparateur est obligatoire.');
-    }
-
-    if (!this.marque.trim()) {
-      erreurs.push('La marque est obligatoire.');
-    }
-
-    if (!this.modele.trim()) {
-      erreurs.push('Le modèle est obligatoire.');
-    }
-
-    if (!this.version.trim()) {
-      erreurs.push('La version est obligatoire.');
-    }
-
-    if (erreurs.length > 0) {
-      erreurs.forEach((message) => this.addToast('Erreur', message, 'error'));
+      this.addToast('Erreur', 'Le réparateur est obligatoire.', 'error');
       return;
     }
 
