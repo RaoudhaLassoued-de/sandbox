@@ -30,26 +30,47 @@
         <span class="menu-label">Menu</span>
       </div>
 
-      <div class="topbar-right">
-        <label class="topbar-label" for="reparateur">Réparateur</label>
+      <div class="topbar-right reparateur-autocomplete">
+        <div class="reparateur-block">
+          <label class="topbar-label" for="reparateurSearch">Réparateur</label>
 
-        <ng-container *ngIf="isEditMode; else reparateurLecture">
-          <select
-            id="reparateur"
-            [(ngModel)]="reparateur"
-            class="topbar-select"
-            [class.input-error]="showErrors && !reparateur"
-          >
-            <option value="">Sélectionner un réparateur</option>
-            <option *ngFor="let item of reparateurs" [value]="item">{{ item }}</option>
-          </select>
-        </ng-container>
+          <ng-container *ngIf="isEditMode; else reparateurLecture">
+            <div class="autocomplete-wrap">
+              <input
+                id="reparateurSearch"
+                type="text"
+                class="topbar-select topbar-input"
+                placeholder="Rechercher un réparateur"
+                [(ngModel)]="reparateurInput"
+                (input)="filtrerReparateurs()"
+                (focus)="ouvrirDropdown()"
+                [class.input-error]="showErrors && !reparateur"
+                autocomplete="off"
+              />
 
-        <ng-template #reparateurLecture>
-          <div class="topbar-readonly">
-            {{ reparateur || 'Non renseigné' }}
-          </div>
-        </ng-template>
+              <ul
+                class="autocomplete-list"
+                *ngIf="openDropdown && reparateursFiltres.length > 0"
+              >
+                <li
+                  *ngFor="let rep of reparateursFiltres"
+                  class="autocomplete-item"
+                  (click)="selectReparateur(rep)"
+                >
+                  {{ formatReparateur(rep) }}
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+
+          <ng-template #reparateurLecture>
+            <div class="topbar-readonly">
+              {{ reparateur || "Non renseigné" }}
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="topbar-logo-placeholder">Logo OPTEVEN</div>
       </div>
     </div>
   </header>
@@ -85,7 +106,8 @@
       <h2>Informations véhicule</h2>
       <p>Veuillez compléter les informations du véhicule et du client.</p>
       <p class="hotline">
-        Pour une assistance téléphonique sur votre dossier, vous pouvez joindre notre hotline au 04 72 43 69 14
+        Pour une assistance téléphonique sur votre dossier, vous pouvez joindre
+        notre hotline au 04 72 43 69 14
       </p>
     </section>
 
@@ -97,9 +119,12 @@
         </div>
 
         <div class="info-badge-wrap card-info-right">
-          <button type="button" class="info-badge" aria-label="Information">i</button>
+          <button type="button" class="info-badge" aria-label="Information">
+            i
+          </button>
           <div class="info-tooltip">
-            Un traitement plus rapide du dossier est possible si les informations Marque / Modèle / Version sont renseignées.
+            Un traitement plus rapide du dossier est possible si les
+            informations Marque / Modèle / Version sont renseignées.
           </div>
         </div>
       </div>
@@ -133,13 +158,18 @@
                 class="input"
               >
                 <option value="">Choisissez une marque</option>
-                <option *ngFor="let item of marques" [value]="item">{{ item }}</option>
+                <option *ngFor="let item of marques" [value]="item">
+                  {{ item }}
+                </option>
               </select>
             </ng-container>
 
             <ng-template #marqueLecture>
-              <div class="field-value readonly-empty" [class.is-empty]="!marque">
-                {{ marque || 'Non renseigné' }}
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!marque"
+              >
+                {{ marque || "Non renseigné" }}
               </div>
             </ng-template>
           </div>
@@ -154,13 +184,18 @@
                 class="input"
               >
                 <option value="">Choisissez un modèle</option>
-                <option *ngFor="let item of modelesDisponibles" [value]="item">{{ item }}</option>
+                <option *ngFor="let item of modelesDisponibles" [value]="item">
+                  {{ item }}
+                </option>
               </select>
             </ng-container>
 
             <ng-template #modeleLecture>
-              <div class="field-value readonly-empty" [class.is-empty]="!modele">
-                {{ modele || 'Non renseigné' }}
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!modele"
+              >
+                {{ modele || "Non renseigné" }}
               </div>
             </ng-template>
           </div>
@@ -169,18 +204,20 @@
             <div class="field-label">Version</div>
 
             <ng-container *ngIf="isEditMode; else versionLecture">
-              <select
-                [(ngModel)]="version"
-                class="input"
-              >
+              <select [(ngModel)]="version" class="input">
                 <option value="">Choisissez une version</option>
-                <option *ngFor="let item of versionsDisponibles" [value]="item">{{ item }}</option>
+                <option *ngFor="let item of versionsDisponibles" [value]="item">
+                  {{ item }}
+                </option>
               </select>
             </ng-container>
 
             <ng-template #versionLecture>
-              <div class="field-value readonly-empty" [class.is-empty]="!version">
-                {{ version || 'Non renseigné' }}
+              <div
+                class="field-value readonly-empty"
+                [class.is-empty]="!version"
+              >
+                {{ version || "Non renseigné" }}
               </div>
             </ng-template>
           </div>

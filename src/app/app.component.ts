@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 type StepState = 'current' | 'disabled' | 'validated';
@@ -17,6 +17,13 @@ interface ToastItem {
   type: 'error' | 'success';
 }
 
+interface ReparateurItem {
+  code: string;
+  nom: string;
+  cp: string;
+  ville: string;
+}
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -27,8 +34,11 @@ interface ToastItem {
 export class AppComponent {
   isEditMode = false;
   showErrors = false;
+  openDropdown = false;
 
   reparateur = '';
+  reparateurInput = '';
+
   marque = '';
   modele = '';
   version = '';
@@ -48,11 +58,34 @@ export class AppComponent {
   readonly ville = 'BUOIVESSE QUIRIEU';
   readonly pays = 'France';
 
-  readonly reparateurs = [
-    'Garage du Centre',
-    'Garage Opteven Lyon',
-    'Garage Test Rhône',
+  readonly reparateurs: ReparateurItem[] = [
+    {
+      code: 'FEUVERT091',
+      nom: 'FEU VERT AMBUTRIX',
+      cp: '01500',
+      ville: 'AMBUTRIX',
+    },
+    {
+      code: 'MIDAS001',
+      nom: 'MIDAS LYON PART-DIEU',
+      cp: '69003',
+      ville: 'LYON',
+    },
+    {
+      code: 'NORAUTO014',
+      nom: 'NORAUTO VILLEFRANCHE',
+      cp: '69400',
+      ville: 'VILLEFRANCHE-SUR-SAONE',
+    },
+    {
+      code: 'SPEEDY078',
+      nom: 'SPEEDY BOURGOIN',
+      cp: '38300',
+      ville: 'BOURGOIN-JALLIEU',
+    },
   ];
+
+  reparateursFiltres: ReparateurItem[] = [...this.reparateurs];
 
   readonly marques = ['Kia', 'Peugeot', 'Renault', 'Volkswagen'];
 
@@ -130,6 +163,34 @@ export class AppComponent {
     this.version = '';
   }
 
+  formatReparateur(item: ReparateurItem): string {
+    return `${item.code} – ${item.nom} ${item.cp} ${item.ville}`;
+  }
+
+  filtrerReparateurs(): void {
+    const valeur = this.reparateurInput.trim().toLowerCase();
+
+    this.reparateursFiltres = this.reparateurs.filter((rep) =>
+      `${rep.code} ${rep.nom} ${rep.cp} ${rep.ville}`
+        .toLowerCase()
+        .includes(valeur)
+    );
+
+    this.openDropdown = true;
+    this.reparateur = '';
+  }
+
+  ouvrirDropdown(): void {
+    this.reparateursFiltres = [...this.reparateurs];
+    this.openDropdown = true;
+  }
+
+  selectReparateur(rep: ReparateurItem): void {
+    this.reparateur = this.formatReparateur(rep);
+    this.reparateurInput = this.reparateur;
+    this.openDropdown = false;
+  }
+
   sauvegarder(showToast: boolean = true): void {
     this.clearToasts();
     this.showErrors = false;
@@ -182,5 +243,13 @@ export class AppComponent {
 
   clearToasts(): void {
     this.toasts = [];
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (!target?.closest('.reparateur-autocomplete')) {
+      this.openDropdown = false;
+    }
   }
 }
